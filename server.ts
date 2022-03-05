@@ -1,16 +1,17 @@
 // import express from 'express';
 // import bodyParser from 'body-parser';
 // import path from 'path';
-import { Request, Response} from "express";
-import { Db } from "mongodb";
 
+const { Db } = require("mongodb");
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const { MongoClient } = require('mongodb');
 require('dotenv').config();
 
+
 const app = express();
+
 const { API_URL, PORT } = process.env;
 const client = new MongoClient(API_URL);
 console.log(__dirname)
@@ -21,9 +22,9 @@ app.use(bodyParser.json()); // parses json object along with post request. Adds 
  * Get a projects information
  * @param name - the name of the project to retrieve
  */
-app.get('/api/portfolio/:name', async (req: Request, res: Response) => {
+app.get('/api/portfolio/:name', async (req: typeof express.Request, res: typeof express.Response) => {
 
-    await withDB(async (db: Db) => {
+    await withDB(async (db: typeof Db) => {
         const projectName = req.params.name;
         const project = await db.collection('Comments').findOne({projectName: projectName});
 
@@ -32,9 +33,9 @@ app.get('/api/portfolio/:name', async (req: Request, res: Response) => {
 
 });
 
-app.post('/api/portfolio/:name/upvote', async (req: Request, res: Response) => {
+app.post('/api/portfolio/:name/upvote', async (req: typeof express.Request, res: typeof express.Response) => {
 
-    await withDB( async (db: Db) => {
+    await withDB( async (db: typeof Db) => {
         const projectName = req.params.name;
         // find the project
         const project: any = await db.collection('Comments').findOne({ projectName: projectName});
@@ -54,11 +55,11 @@ app.post('/api/portfolio/:name/upvote', async (req: Request, res: Response) => {
 
 });
 
-app.post('/api/portfolio/:name/add-comment', async(req: Request, res: Response) => {
+app.post('/api/portfolio/:name/add-comment', async(req: typeof express.Request, res: typeof express.Response) => {
     const projectName = req.params.name; // url param
     const { username, text } = req.body; // request body destructured into the appropriate const
 
-    await withDB( async (db: Db) => {
+    await withDB( async (db: typeof Db) => {
         // connect to the collection and query the db to find the correct project
         const projectInfo: any = await db.collection('Comments').findOne({ projectName: projectName });
 
@@ -81,14 +82,14 @@ app.post('/api/portfolio/:name/add-comment', async(req: Request, res: Response) 
 /**
  * Serves the index.html file in the build folder
  */
-app.get('*', (req: Request, res: Response) => {
+app.get('*', (req: typeof express.Request, res: typeof express.Response) => {
     res.sendFile(path.join(__dirname, "client/build/index.html"));
 });
 
 app.listen(PORT, () => console.log(`App is listening on port ${PORT}`));
 
 // Connects to mongodb and uses callback to determine what the function will perform
-const withDB = async (operations: any, res: Response) => {
+const withDB = async (operations: any, res: typeof express.Response) => {
     try{
         await client.connect(); // connect to mongo
 
