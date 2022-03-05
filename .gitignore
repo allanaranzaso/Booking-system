@@ -22,7 +22,8 @@ gradle-app.setting
 /coverage
 
 # production
-/build
+.idea
+client/build
 
 # misc
 .DS_Store
