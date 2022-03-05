@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": " node bin/www",
-    "build:dev": "cd client && npm run build",
-    "dev:express": "npm run build && family-travel/node_modules/.bin/nodemon --exec 'ts-node' server.ts"
+    "build": "cd client && npm run build",
+    "dev:express": "npm run build:dev && nodemon --exec 'ts-node' server.ts"
   },
   "keywords": [],
   "author": "",

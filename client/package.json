@@ -18,10 +18,10 @@
   },
   "scripts": {
     "start": "node ../bin/www",
-    "start-dev": "../family-travel/node_modules/.bin/react-scripts start",
-    "build": "../family-travel/node_modules/.bin/react-scripts build",
-    "test": "../family-travel/node_modules/.bin/react-scripts test",
-    "eject": "../family-travel/node_modules/.bin/react-scripts eject",
+    "start-dev": "../node_modules/.bin/react-scripts start",
+    "build": "../node_modules/.bin/react-scripts build",
+    "test": "../node_modules/.bin/react-scripts test",
+    "eject": "..//node_modules/.bin/react-scripts eject",
     "cypress:open": "../node_modules/.bin/cypress open"
   },
   "eslintConfig": {

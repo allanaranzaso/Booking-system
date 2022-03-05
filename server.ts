@@ -1,8 +1,9 @@
 // import express from 'express';
 // import bodyParser from 'body-parser';
 // import path from 'path';
-// import {Request, Response} from "express";
-//TODO: fix the types that are complaining
+import { Request, Response} from "express";
+import { Db } from "mongodb";
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -13,17 +14,16 @@ const app = express();
 const { API_URL, PORT } = process.env;
 const client = new MongoClient(API_URL);
 console.log(__dirname)
-app.use(express.static(path.join(__dirname, '/client/build'))); // tells express where the files to be served are located
+app.use(express.static(path.join(__dirname, 'client/build'))); // tells express where the files to be served are located
 app.use(bodyParser.json()); // parses json object along with post request. Adds body prop to request param... access the json properties by using req.body.jsonProp
 
-// @ts-ignore
 /**
  * Get a projects information
  * @param name - the name of the project to retrieve
  */
-app.get('/api/portfolio/:name', async (req, res) => {
+app.get('/api/portfolio/:name', async (req: Request, res: Response) => {
 
-    await withDB(async (db) => {
+    await withDB(async (db: Db) => {
         const projectName = req.params.name;
         const project = await db.collection('Comments').findOne({projectName: projectName});
 
@@ -32,15 +32,15 @@ app.get('/api/portfolio/:name', async (req, res) => {
 
 });
 
-app.post('/api/portfolio/:name/upvote', async (req, res) => {
+app.post('/api/portfolio/:name/upvote', async (req: Request, res: Response) => {
 
-    withDB( async (db) => {
+    await withDB( async (db: Db) => {
         const projectName = req.params.name;
         // find the project
-        const project = await db.collection('Comments').findOne({ projectName: projectName});
+        const project: any = await db.collection('Comments').findOne({ projectName: projectName});
         
         // update the project upvotes
-        await db.collection('Comments').updateOne({ projectName: projectName},{ 
+        await db.collection('Comments').updateOne({ projectName: projectName},{
             '$set': {
                 upvote: project.upvote + 1,
             },
@@ -54,13 +54,13 @@ app.post('/api/portfolio/:name/upvote', async (req, res) => {
 
 });
 
-app.post('/api/portfolio/:name/add-comment', (req, res) => {
+app.post('/api/portfolio/:name/add-comment', async(req: Request, res: Response) => {
     const projectName = req.params.name; // url param
     const { username, text } = req.body; // request body destructured into the appropriate const
 
-    withDB( async (db) => {
+    await withDB( async (db: Db) => {
         // connect to the collection and query the db to find the correct project
-        const projectInfo = await db.collection('Comments').findOne({ projectName: projectName });
+        const projectInfo: any = await db.collection('Comments').findOne({ projectName: projectName });
 
         // update the object
         await db.collection('Comments').updateOne({ projectName: projectName }, {
@@ -81,14 +81,14 @@ app.post('/api/portfolio/:name/add-comment', (req, res) => {
 /**
  * Serves the index.html file in the build folder
  */
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, "/client/build/index.html"));
+app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, "client/build/index.html"));
 });
 
 app.listen(PORT, () => console.log(`App is listening on port ${PORT}`));
 
 // Connects to mongodb and uses callback to determine what the function will perform
-const withDB = async (operations, res) => {
+const withDB = async (operations: any, res: Response) => {
     try{
         await client.connect(); // connect to mongo
 
