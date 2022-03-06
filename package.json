@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "start": " node bin/www",
-    "build": "cd client && npm run build",
+    "build": "npx tsc server.ts && cd client && npm run build",
     "dev:express": "npm run build && nodemon --exec 'ts-node' server.ts"
   },
   "keywords": [],
