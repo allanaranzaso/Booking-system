@@ -2,18 +2,23 @@
 // import bodyParser from 'body-parser';
 // import path from 'path';
 
-const { Db } = require("mongodb");
-const express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
-const { MongoClient } = require('mongodb');
-require('dotenv').config();
+import { Db } from "mongodb";
+import * as bodyParser from "body-parser";
+import * as path from 'path';
+import { MongoClient } from "mongodb";
+import * as dotenv from 'dotenv';
 
+const express = require('express');
+// const bodyParser = require('body-parser');
+// const path = require('path');
+// const { MongoClient } = require('mongodb');
+// require('dotenv').config();
+dotenv.config();
 
 const app = express();
 
 const { API_URL, PORT } = process.env;
-const client = new MongoClient(API_URL);
+const client = new MongoClient(API_URL as string);
 console.log(__dirname)
 app.use(express.static(path.join(__dirname, 'client/build'))); // tells express where the files to be served are located
 app.use(bodyParser.json()); // parses json object along with post request. Adds body prop to request param... access the json properties by using req.body.jsonProp
@@ -24,7 +29,7 @@ app.use(bodyParser.json()); // parses json object along with post request. Adds 
  */
 app.get('/api/portfolio/:name', async (req: typeof express.Request, res: typeof express.Response) => {
 
-    await withDB(async (db: typeof Db) => {
+    await withDB(async (db:  Db) => {
         const projectName = req.params.name;
         const project = await db.collection('Comments').findOne({projectName: projectName});
 
@@ -35,7 +40,7 @@ app.get('/api/portfolio/:name', async (req: typeof express.Request, res: typeof 
 
 app.post('/api/portfolio/:name/upvote', async (req: typeof express.Request, res: typeof express.Response) => {
 
-    await withDB( async (db: typeof Db) => {
+    await withDB( async (db:  Db) => {
         const projectName = req.params.name;
         // find the project
         const project: any = await db.collection('Comments').findOne({ projectName: projectName});
@@ -59,7 +64,7 @@ app.post('/api/portfolio/:name/add-comment', async(req: typeof express.Request, 
     const projectName = req.params.name; // url param
     const { username, text } = req.body; // request body destructured into the appropriate const
 
-    await withDB( async (db: typeof Db) => {
+    await withDB( async (db: Db) => {
         // connect to the collection and query the db to find the correct project
         const projectInfo: any = await db.collection('Comments').findOne({ projectName: projectName });
 
