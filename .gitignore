@@ -24,7 +24,6 @@ gradle-app.setting
 # production
 .idea
 client/build
-client/node_modules
 
 # misc
 .DS_Store
